@@ -13,7 +13,7 @@ const PATHS = {
 require('dotenv').config({ path: path.join(ROOT_DIR, '.env.development') });
 
 module.exports = {
-  entry: path.join(PATHS.src, 'index.jsx'),
+  entry: path.join(PATHS.src, 'index.js'),
   output: {
     path: PATHS.dist,
     filename: '[name].js',

@@ -9,7 +9,7 @@
   "scripts": {
     "start": "webpack-dev-server --config webpack/webpack.config.js",
     "lint": "eslint __tests__ src/**/*.{js,jsx} webpack",
-    "lint:fix": "eslint __tests__ src/**/*.{js,jsx} webpack -- --fix",
+    "lint:fix": "eslint __tests__ src/**/*.{js,jsx} webpack --fix",
     "test": "jest --config jest.config.js",
     "test:watch": "jest --config jest.config.js --watch",
     "test:cov": "jest --config jest.config.js --coverage",
@@ -18,15 +18,19 @@
   "dependencies": {
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
-    "react-dom": "^15.5.4"
+    "react-dom": "^15.5.4",
+    "react-redux": "^5.0.5",
+    "redux": "^3.6.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-eslint": "^7.2.3",
     "babel-loader": "^7.0.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-env": "^1.5.1",
     "babel-preset-react": "^6.24.1",
     "dotenv": "^4.0.0",
+    "enzyme": "^2.8.2",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^15.0.1",
     "eslint-plugin-import": "^2.2.0",

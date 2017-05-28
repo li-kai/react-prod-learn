@@ -5,6 +5,10 @@ module.exports = {
     '<rootDir>/__tests__',
     '<rootDir>/src',
   ],
+  testMatch: [
+    '<rootDir>/src/**/__tests__/**/*.js?(x)',
+    '<rootDir>/src/**/?(*.)(spec|test).js?(x)',
+  ],
   testPathIgnorePatterns: [
     '.eslintrc.js',
     '<rootDir>[/\\\\](dist|docs|node_modules)[/\\\\]',

@@ -7,6 +7,7 @@ module.exports = {
   env: {
     browser: true,
     node: true,
+    jest: true,
   },
   plugins: [
     'import',
@@ -21,6 +22,13 @@ module.exports = {
     },
   },
   rules: {
+    'import/no-extraneous-dependencies': ['error', {
+      'devDependencies': [
+        '**/*.test.{js,jsx}',
+        '**/*.spec.{js,jsx}',
+      ]
+    }],
+    'react/jsx-filename-extension': 'off',
     // SEE: https://github.com/yannickcr/eslint-plugin-react/issues
     'react/no-unused-prop-types': 'off',
     // Let git handle the linebreaks instead.
