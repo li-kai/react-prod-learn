@@ -7,7 +7,7 @@
   "author": "li-kai <falconets25601@hotmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "webpack src --config webpack/webpack.config.js"
+    "start": "webpack src --config webpack/webpack.config.js"
   },
   "dependencies": {
     "react": "^15.5.4",
@@ -18,6 +18,7 @@
     "babel-loader": "^7.0.0",
     "babel-preset-env": "^1.5.1",
     "babel-preset-react": "^6.24.1",
+    "html-webpack-plugin": "^2.28.0",
     "webpack": "^2.6.1"
   }
 }

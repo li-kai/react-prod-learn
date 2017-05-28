@@ -12,7 +12,7 @@ We'll be using [yarn](https://yarnpkg.com/lang/en/docs/install/) as our package 
 
 Installs React and React-dom. Also installs Babel and webpack for compiling `jsx`.
 
-#### `src/index.js`
+#### `src/index.jsx`
 
 A basic react page.
 
@@ -22,7 +22,7 @@ A basic babel transform to make our React code work across browsers.
 
 #### `webpack/webpack.config.js`
 
-A simple webpack configuration to compile the file. Does nothing yet.
+A simple webpack configuration to compile the file. `yarn start` will compile to the dist folder. You should see `Hello world!` text when you open `index.html` in the browser.
 
 #### `.gitignore`
 
