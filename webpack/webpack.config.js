@@ -1,6 +1,6 @@
 const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const DotenvWebpackPlugin = require('dotenv-webpack');
 
 const ROOT_DIR = path.join(__dirname, '..');
 const PATHS = {
@@ -9,6 +9,8 @@ const PATHS = {
   public: path.join(ROOT_DIR, 'public'),
   node_modules: path.join(ROOT_DIR, 'node_modules'),
 };
+
+require('dotenv').config({ path: path.join(ROOT_DIR, '.env.development') });
 
 module.exports = {
   entry: path.join(PATHS.src, 'index.jsx'),
@@ -29,13 +31,32 @@ module.exports = {
     ],
   },
   plugins: [
+    // Silly webpack, environment variables aren't injected by default
+    new webpack.EnvironmentPlugin(['NODE_ENV', 'BABEL_ENV']),
     new HtmlWebpackPlugin({
       title: 'React Prod Learn',  // HTML Title of document
       inject: true,               // Place scripts at the end of <body>
       template: path.join(PATHS.public, 'index.html'),
     }),
-    new DotenvWebpackPlugin({
-      safe: true, // load .env.example
-    }),
+    // Ignore node_modules so CPU usage with poll
+    // watching drops significantly.
+    new webpack.WatchIgnorePlugin([
+      PATHS.node_modules,
+    ]),
   ],
+  devServer: {
+    // Enable history API fallback so HTML5 History API based
+    // routing works. Good for complex setups.
+    historyApiFallback: true,
+
+    // Parse host and port from env to allow customization.
+    //
+    // If you use Docker, Vagrant or Cloud9, set
+    // host: options.host || '0.0.0.0';
+    //
+    // 0.0.0.0 is available to all network devices
+    // unlike default `localhost`.
+    host: process.env.HOST, // Defaults to `localhost`
+    port: process.env.PORT, // Defaults to 8080
+  },
 };

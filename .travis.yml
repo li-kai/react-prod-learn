@@ -1,18 +1,14 @@
 language: node_js
+sudo: false
 git:
   depth: 3
 cache:
   yarn: true
   directories:
     - "node_modules"
-    - "coverage"
-jobs:
-  include:
-    - stage: prepare cache
-      script: true
-    - stage: test
-      script: yarn run lint      # Linting gotta pass
-      script: yarn run test:cov  # Run the tests and generate coverage
-      script: yarn run build     # Make sure building succeeds
+script:
+  - yarn run init
+  - yarn run lint
+  - yarn run test:cov
 after_success:
-    - script: yarn run ci        # Submit coverage
+  - yarn run coveralls

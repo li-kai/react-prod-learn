@@ -6,13 +6,7 @@ With the addition of HtmlWebpackPlugin, we can finally have our first React app 
 
 Let's add a few more tools, like linters and test frameworks. We'll be going with Jest here, along with Travis as our CI.
 
-Also we're upgrading babel to the @next version, so we can use `.babelrc.js` instead.
-
 ### New files
-
-#### `public/index.html`
-
-Entry point html for our React code.
 
 #### `.nvmrc`
 
