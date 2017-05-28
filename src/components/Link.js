@@ -8,6 +8,7 @@ const Link = ({ active, children, onClick }) => {
 
   return (
     <button
+      className="btn btn-secondary"
       href="#"
       onClick={(e) => {
         e.preventDefault();
