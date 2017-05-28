@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const DotenvWebpackPlugin = require('dotenv-webpack');
 
 const ROOT_DIR = path.join(__dirname, '..');
 const PATHS = {
@@ -32,6 +33,9 @@ module.exports = {
       title: 'React Prod Learn',  // HTML Title of document
       inject: true,               // Place scripts at the end of <body>
       template: path.join(PATHS.public, 'index.html'),
+    }),
+    new DotenvWebpackPlugin({
+      safe: true, // load .env.example
     }),
   ],
 };

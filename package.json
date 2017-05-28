@@ -7,18 +7,35 @@
   "author": "li-kai <falconets25601@hotmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "webpack src --config webpack/webpack.config.js"
+    "start": "webpack-dev-server --config webpack/webpack.config.js",
+    "lint": "eslint __tests__ src/**/*.{js,jsx} webpack",
+    "lint:fix": "eslint __tests__ src/**/*.{js,jsx} webpack -- --fix",
+    "test": "jest --config jest.config.js",
+    "test:watch": "jest --config jest.config.js --watch",
+    "test:cov": "jest --config jest.config.js --coverage",
+    "ci": "cat ./coverage/lcov.info | coveralls"
   },
   "dependencies": {
+    "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-dom": "^15.5.4"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
+    "babel-eslint": "^7.2.3",
     "babel-loader": "^7.0.0",
     "babel-preset-env": "^1.5.1",
     "babel-preset-react": "^6.24.1",
+    "dotenv-webpack": "^1.4.5",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^15.0.1",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^5.0.1",
+    "eslint-plugin-react": "^7.0.1",
     "html-webpack-plugin": "^2.28.0",
-    "webpack": "^2.6.1"
+    "jest": "^20.0.4",
+    "react-dev-utils": "^3.0.0",
+    "webpack": "^2.6.1",
+    "webpack-dev-server": "^2.4.5"
   }
 }

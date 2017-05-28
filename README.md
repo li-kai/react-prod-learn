@@ -1,37 +1,47 @@
 # React Production Learn
 
-## Step 1: Basics
+## Step 2: Essentials
 
-Since this _is_ a React boilerplate, we need to start off by installing React!
+With the addition of HtmlWebpackPlugin, we can finally have our first React app running through `yarn start`!
 
-We'll be using [yarn](https://yarnpkg.com/lang/en/docs/install/) as our package manager, because in deterministic builds we trust.
+Let's add a few more tools, like linters and test frameworks. We'll be going with Jest here, along with Travis as our CI.
+
+Also we're upgrading babel to the @next version, so we can use `.babelrc.js` instead.
 
 ### New files
 
-#### `package.json`
+#### `public/index.html`
 
-Installs React and React-dom. Also installs Babel and webpack for compiling `jsx`.
+Entry point html for our React code.
 
-#### `src/index.jsx`
+#### `.nvmrc`
 
-A basic react page.
+Keep node versions consistent across workspaces.
 
-#### `.babelrc`
+#### `.eslintrc.js`
 
-A basic babel transform to make our React code work across browsers.
+Keep styling consistent across workspaces. We're going with [Airbnb's styling](https://www.npmjs.com/package/eslint-config-airbnb).
 
-#### `webpack/webpack.config.js`
+#### `.editorconfig`
 
-A simple webpack configuration to compile the file. `yarn start` will compile to the dist folder. You should see `Hello world!` text when you open `index.html` in the browser.
+Keep editor configuration consistent across editors.
 
-#### `.gitignore`
+#### `jest.config.js`, `__mocks__`, `__tests__`
 
-Copied from [github/gitignore](https://github.com/github/gitignore/blob/master/Node.gitignore). Most important take away here is to ignore `node_modules`!
+Write tests!
 
-#### `.gitattributes`
+#### `.travis.yml`
 
-Copied from [alexkaratarakis/gitattributes](https://github.com/alexkaratarakis/gitattributes/blob/master/Web.gitattributes). Mostly to keep line-endings consistent.
+CI for tests and deployment.
 
-#### `LICENSE.md`
+#### `.env` `.env.development`
 
-Set up a license, so you can copy all you want without repercussions!
+Environment variables made easy!
+
+### New libraries
+
+- [dotenv](https://www.npmjs.com/package/dotenv): Manage environment variables easily
+- [dotenv-webpack](https://www.npmjs.com/package/dotenv-webpack): Webpack is silly. Env variables aren't injected.
+- [prop-type](https://www.npmjs.com/package/prop-types): It's essential to check to prevent silly mistakes.
+- [jest](http://facebook.github.io/jest/): Test library
+- [HtmlWebpackPlugin](https://github.com/jantimon/html-webpack-plugin): React needs to output a html file
