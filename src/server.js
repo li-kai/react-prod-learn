@@ -1,10 +1,10 @@
 import Express from 'express';
 import React from 'react';
-import { renderToString } from 'react-dom/server';
+import { renderToString, renderToStaticMarkup } from 'react-dom/server';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import webpack from 'webpack';
-import webpackDevMiddleware from 'webpack-dev-middleware';
+
+import HTMLDocument from './components/HTMLDocument';
 // import webpackHotMiddleware from 'webpack-hot-middleware';
 
 import config from '../webpack/webpack.config';
@@ -15,29 +15,11 @@ const app = Express();
 
 // Run Webpack dev server in development mode
 if (process.env.NODE_ENV === 'development') {
+  const webpack = require('webpack');
+  const webpackDevMiddleware = require('webpack-dev-middleware');
   const compiler = webpack(config);
-  app.use(webpackDevMiddleware(compiler));
+  app.use(webpackDevMiddleware(compiler, { serverSideRender: true }));
   // app.use(webpackHotMiddleware(compiler));
-}
-
-function renderFullPage(html, preloadedState) {
-  return `
-    <!doctype html>
-    <html>
-      <head>
-        <title>Redux Universal Example</title>
-      </head>
-      <body>
-        <div id="root">${html}</div>
-        <script>
-          // WARNING: See the following for security issues around embedding JSON in HTML:
-          // http://redux.js.org/docs/recipes/ServerRendering.html#security-considerations
-          window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
-        </script>
-        <script src="/static/bundle.js"></script>
-      </body>
-    </html>
-    `;
 }
 
 function handleRender(req, res) {
@@ -45,7 +27,7 @@ function handleRender(req, res) {
   const store = createStore(rootReducer);
 
   // Render the component to a string
-  const html = renderToString(
+  const componentMarkUp = renderToString(
     <Provider store={store}>
       <App />
     </Provider>,
@@ -53,9 +35,18 @@ function handleRender(req, res) {
 
   // Grab the initial state from our Redux store
   const preloadedState = store.getState();
+  const webpackAssets = res.locals.webpackStats.toJson();
+
+  const html = renderToStaticMarkup(
+    <HTMLDocument
+      state={preloadedState}
+      markup={componentMarkUp}
+      webpackAssets={webpackAssets}
+    />,
+  );
 
   // Send the rendered page back to the client
-  res.send(renderFullPage(html, preloadedState));
+  res.send(`<!DOCTYPE html>${html}`);
 }
 
 // This is fired every time the server side receives a request
