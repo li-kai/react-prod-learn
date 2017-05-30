@@ -47,6 +47,7 @@ if (IS_DEV_ENV) { /* eslint-disable global-require, import/no-extraneous-depende
   server.use(webpackDevMiddleware(compiler, {
     serverSideRender: true,
     stats: {
+      colors: true,
       hash: false,
       version: false,
       chunks: false,

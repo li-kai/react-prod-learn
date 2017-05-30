@@ -37,4 +37,6 @@ module.exports = merge([commonConfig,
       ],
     },
   }),
+  parts.loadImages({ include: [PATHS.public, PATHS.src] }),
+  parts.loadFonts({ include: [PATHS.public, PATHS.src] }),
 ]);
