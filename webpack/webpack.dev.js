@@ -1,15 +1,14 @@
-import path from 'path';
-import fs from 'fs';
-import merge from 'webpack-merge';
+const path = require('path');
+const fs = require('fs-extra');
+const merge = require('webpack-merge');
 
-import parts from './webpack.parts';
-import PATHS from '../config/paths';
+const PATHS = require('../config/paths');
+const SUPPORTED_BROWSERS = require('../config/supportedBrowsers');
 
-import commonConfig from './webpack.config';
-import SUPPORTED_BROWSERS from '../config/supportedBrowsers';
+const parts = require('./webpack.parts');
+const commonConfig = require('./webpack.config');
 
-const babelrcPath = path.join(PATHS.root, '.babelrc');
-const babelConfig = JSON.parse(fs.readFileSync(babelrcPath));
+const babelConfig = fs.readJSONSync(path.join(PATHS.root, '.babelrc'));
 
 module.exports = merge([commonConfig,
   {
@@ -23,9 +22,8 @@ module.exports = merge([commonConfig,
   },
   parts.transpileJavascript({
     include: PATHS.src,
-    options: {
+    options: Object.assign(babelConfig, {
       babelrc: false,
-      ...babelConfig,
       presets: [  // Override presets to support browsers
         ['env', {
           targets: {
@@ -35,8 +33,10 @@ module.exports = merge([commonConfig,
         }],
         'react',
       ],
-    },
+    }),
   }),
   parts.loadImages({ include: [PATHS.public, PATHS.src] }),
   parts.loadFonts({ include: [PATHS.public, PATHS.src] }),
+  parts.loadCSS({ include: PATHS.src, exclude: PATHS.styles, isCSSModules: true }),
+  parts.loadCSS({ include: PATHS.styles, isCSSModules: false }),
 ]);

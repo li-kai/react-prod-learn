@@ -34,7 +34,6 @@ class HTMLDocument extends PureComponent {
         .map(f => ({ path: f })),
       { path: webpackAssets.main },
     ];
-    console.log(scripts);
 
     return (
       <html lang="en">

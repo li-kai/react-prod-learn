@@ -1,10 +1,10 @@
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
-import BabiliPlugin from 'babili-webpack-plugin';
-import cssnano from 'cssnano';
-import autoprefixer from 'autoprefixer';
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const BabiliPlugin = require('babili-webpack-plugin');
+const cssnano = require('cssnano');
+const autoprefixer = require('autoprefixer');
 
-import SUPPORTED_BROWSERS from '../config/supportedBrowsers';
+const SUPPORTED_BROWSERS = require('../config/supportedBrowsers');
 
 /**
  * Allows us to write ES6/ES2015 Javascript.
@@ -181,7 +181,7 @@ exports.loadFonts = ({ include, exclude, options } = {}) => ({
 });
 
 /**
- * Some libraries import Node modules but don't use them in the browser.
+ * Some libraries const Node = require(but don't use them in the browser).
  * Tell Webpack to provide empty mocks for them so importing them works.
  *
  * @see https://webpack.js.org/configuration/node/#node

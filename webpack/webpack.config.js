@@ -1,9 +1,8 @@
-import path from 'path';
-import webpack from 'webpack';
-import merge from 'webpack-merge';
+const path = require('path');
+const webpack = require('webpack');
+const merge = require('webpack-merge');
 
-import parts from './webpack.parts';
-import PATHS from '../config/paths';
+const PATHS = require('../config/paths');
 
 module.exports = merge([
   {
@@ -31,6 +30,4 @@ module.exports = merge([
       }),
     ],
   },
-  parts.loadCSS({ include: PATHS.src, exclude: PATHS.styles, isCSSModules: true }),
-  parts.loadCSS({ include: PATHS.styles, isCSSModules: false }),
 ]);
