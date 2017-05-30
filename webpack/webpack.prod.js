@@ -61,4 +61,5 @@ module.exports = merge([commonConfig,
   parts.loadFonts({ include: PATHS.public }),
   parts.extractCSS({ include: PATHS.src, exclude: PATHS.styles, isCSSModules: true }),
   parts.extractCSS({ include: PATHS.styles, isCSSModules: false }),
+  parts.writeStats(),
 ]);
