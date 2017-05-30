@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import serialize from 'serialize-javascript';
-import { get, omit } from 'lodash';
+import { get } from 'lodash';
 
 class HTMLDocument extends PureComponent {
   static propTypes = {
@@ -42,9 +42,9 @@ class HTMLDocument extends PureComponent {
           { helmet.title.toComponent() }
           { helmet.meta.toComponent() }
           { helmet.link.toComponent() }
-          <link rel="preload" href="/manifest.js" as="script" />
+          {/* <link rel="preload" href="/manifest.js" as="script" />
           <link rel="preload" href="/vendor.js" as="script" />
-          <link rel="preload" href="/main.js" as="script" />
+          <link rel="preload" href="/main.js" as="script" />*/}
         </head>
         <body>
           { /* eslint-disable react/no-danger, max-len */ }
@@ -54,7 +54,7 @@ class HTMLDocument extends PureComponent {
           { /* eslint-enable react/no-danger, max-len */ }
           { helmet.script.toComponent() }
           {
-            this.scripts.map(script => <script key={script.path} async={script.async} src={script.path} />)
+            scripts.map(script => <script key={script.path} async={script.async} src={script.path} />)
           }
         </body>
       </html>
