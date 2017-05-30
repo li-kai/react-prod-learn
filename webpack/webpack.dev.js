@@ -1,11 +1,12 @@
-const path = require('path');
-const fs = require('fs');
-const merge = require('webpack-merge');
+import path from 'path';
+import fs from 'fs';
+import merge from 'webpack-merge';
 
-const parts = require('./webpack.parts');
-const PATHS = require('../config/paths');
+import parts from './webpack.parts';
+import PATHS from '../config/paths';
 
-const commonConfig = require('./webpack.config');
+import commonConfig from './webpack.config';
+import SUPPORTED_BROWSERS from '../config/supportedBrowsers';
 
 const babelrcPath = path.join(PATHS.root, '.babelrc');
 const babelConfig = JSON.parse(fs.readFileSync(babelrcPath));
@@ -25,10 +26,10 @@ module.exports = merge([commonConfig,
     options: {
       babelrc: false,
       ...babelConfig,
-      presets: [
+      presets: [  // Override presets to support browsers
         ['env', {
           targets: {
-            browsers: ['>1%'],
+            browsers: SUPPORTED_BROWSERS,
           },
           modules: false,
         }],
