@@ -2,38 +2,19 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import serialize from 'serialize-javascript';
-import get from 'lodash/get';
+import { get, omit } from 'lodash';
 
 class HTMLDocument extends PureComponent {
   static propTypes = {
     markup: PropTypes.string.isRequired,
     state: PropTypes.object.isRequired,
     asyncChunks: PropTypes.array,
-    webpackAssets: PropTypes.shape({
-      css: PropTypes.array,
-      js: PropTypes.array.isRequired,
-    }),
+    webpackAssets: PropTypes.objectOf(PropTypes.string).isRequired,
   };
 
   static defaultProps = {
     asyncChunks: [],
-    webpackAssets: {},
   };
-
-  getApplicationScripts() {
-    const { webpackAssets, asyncChunks } = this.props;
-    const scripts = [
-      { path: webpackAssets.js.manifest },
-      { path: webpackAssets.js.vendor },
-      ...asyncChunks
-        .map(path => get(webpackAssets, ['modules', path]))
-        .filter(f => f != null)
-        .map(f => ({ path: f })),
-      { path: webpackAssets.js.main },
-    ];
-
-    return scripts;
-  }
 
   render() {
     const helmet = Helmet.renderStatic();
@@ -41,7 +22,19 @@ class HTMLDocument extends PureComponent {
       markup,
       state,
       webpackAssets,
+      asyncChunks,
     } = this.props;
+
+    const scripts = [
+      { path: webpackAssets.manifest },
+      { path: webpackAssets.vendor },
+      ...asyncChunks
+        .map(path => get(webpackAssets, ['modules', path]))
+        .filter(f => f != null)
+        .map(f => ({ path: f })),
+      { path: webpackAssets.main },
+    ];
+    console.log(scripts);
 
     return (
       <html lang="en">
@@ -49,6 +42,9 @@ class HTMLDocument extends PureComponent {
           { helmet.title.toComponent() }
           { helmet.meta.toComponent() }
           { helmet.link.toComponent() }
+          <link rel="preload" href="/manifest.js" as="script" />
+          <link rel="preload" href="/vendor.js" as="script" />
+          <link rel="preload" href="/main.js" as="script" />
         </head>
         <body>
           { /* eslint-disable react/no-danger, max-len */ }
@@ -58,9 +54,7 @@ class HTMLDocument extends PureComponent {
           { /* eslint-enable react/no-danger, max-len */ }
           { helmet.script.toComponent() }
           {
-            this
-              .getApplicationScripts()
-              .map(script => <script key={script.path} async={script.async} src={script.path} />)
+            this.scripts.map(script => <script key={script.path} async={script.async} src={script.path} />)
           }
         </body>
       </html>

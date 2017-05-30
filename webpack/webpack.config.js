@@ -5,8 +5,6 @@ const merge = require('webpack-merge');
 const parts = require('./webpack.parts');
 const PATHS = require('../config/paths');
 
-require('dotenv').config({ path: path.join(PATHS.root, '.env.development') });
-
 module.exports = merge([
   {
     entry: path.join(PATHS.src, 'client.js'),
@@ -34,6 +32,16 @@ module.exports = merge([
       new webpack.WatchIgnorePlugin([
         PATHS.node_modules,
       ]),
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'vendor',
+        minChunks(module) {
+          return module.context && module.context.indexOf('node_modules') !== -1;
+        },
+      }),
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'manifest',
+        minChunks: Infinity,
+      }),
     ],
   },
   parts.loadCSS({ include: PATHS.src, exclude: PATHS.styles, isCSSModules: true }),

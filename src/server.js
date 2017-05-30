@@ -1,25 +1,34 @@
+import path from 'path';
+import dotenv from 'dotenv';
 import Express from 'express';
 import React from 'react';
 import { renderToString, renderToStaticMarkup } from 'react-dom/server';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 
-import HTMLDocument from './components/HTMLDocument';
-// import webpackHotMiddleware from 'webpack-hot-middleware';
+import PATHS from '../config/paths';
 
-import config from '../webpack/webpack.config';
 import rootReducer from './reducers';
-import App from './containers/App';
+import App from './App';
+import HTMLDocument from './components/HTMLDocument';
 
-const app = Express();
+dotenv.config({ path: path.join(PATHS.root, '.env.development') });
+const IS_DEV_ENV = process.env.NODE_ENV === 'development';
 
-// Run Webpack dev server in development mode
-if (process.env.NODE_ENV === 'development') {
+const server = Express();
+
+let webpackAssets;
+if (IS_DEV_ENV) { /* eslint-disable global-require, import/no-extraneous-dependencies */
+  // Run Webpack dev server in development mode
+  const webpackConfig = require('../webpack/webpack.config');
   const webpack = require('webpack');
   const webpackDevMiddleware = require('webpack-dev-middleware');
-  const compiler = webpack(config);
-  app.use(webpackDevMiddleware(compiler, { serverSideRender: true }));
+  // const webpackHotMiddleware = require('webpack-hot-middleware');
+  const compiler = webpack(webpackConfig);
+  server.use(webpackDevMiddleware(compiler, { serverSideRender: true }));
   // app.use(webpackHotMiddleware(compiler));
+} else {  /* eslint-disable global-require, import/no-extraneous-dependencies */
+  // webpackAssets = require('./wesbpack-stats.json');
 }
 
 function handleRender(req, res) {
@@ -35,7 +44,9 @@ function handleRender(req, res) {
 
   // Grab the initial state from our Redux store
   const preloadedState = store.getState();
-  const webpackAssets = res.locals.webpackStats.toJson();
+  if (IS_DEV_ENV) {
+    webpackAssets = res.locals.webpackStats.toJson().assetsByChunkName;
+  }
 
   const html = renderToStaticMarkup(
     <HTMLDocument
@@ -50,12 +61,12 @@ function handleRender(req, res) {
 }
 
 // This is fired every time the server side receives a request
-app.use(handleRender);
+server.use(handleRender);
 
 // Finally, start the express server
-const port = process.env.PORT || 3000;
-app.listen(port, (error) => {
+const port = process.env.PORT;
+server.listen(port, (error) => {
   if (!error) {
-    console.log(port);
+    console.log(`Server started at port ${port}`);
   }
 });
