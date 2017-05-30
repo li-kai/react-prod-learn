@@ -57,9 +57,9 @@ class HTMLDocument extends PureComponent {
             ? <link rel="stylesheet" type="text/css" href={assetsByType.main.css} />
             : null
           }
-          {/* <link rel="preload" href="/manifest.js" as="script" />
-          <link rel="preload" href="/vendor.js" as="script" />
-          <link rel="preload" href="/main.js" as="script" />*/}
+          <link rel="preload" href={assetsByType.manifest.js} as="script" />
+          <link rel="preload" href={assetsByType.vendor.js} as="script" />
+          <link rel="preload" href={assetsByType.main.js} as="script" />
         </head>
         <body>
           { /* eslint-disable react/no-danger, max-len */ }
