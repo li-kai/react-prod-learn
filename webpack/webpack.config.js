@@ -8,10 +8,6 @@ const PATHS = require('../config/paths');
 module.exports = merge([
   {
     entry: path.join(PATHS.src, 'client.js'),
-    output: {
-      path: PATHS.dist,
-      filename: '[name].js',
-    },
     resolve: {
       extensions: ['.js', '.jsx', '.json'],
     },
