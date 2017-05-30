@@ -1,9 +1,10 @@
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const cssnano = require('cssnano');
-const autoprefixer = require('autoprefixer');
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
+import BabiliPlugin from 'babili-webpack-plugin';
+import cssnano from 'cssnano';
+import autoprefixer from 'autoprefixer';
 
-const SUPPORTED_BROWSERS = require('../config/supportedBrowsers');
+import SUPPORTED_BROWSERS from '../config/supportedBrowsers';
 
 /**
  * Allows us to write ES6/ES2015 Javascript.
@@ -26,6 +27,20 @@ exports.transpileJavascript = ({ include, exclude, options }) => ({
       },
     ],
   },
+});
+
+/**
+ * Minifies Javascript to make them smaller and faster.
+ *
+ * @see https://webpack.js.org/plugins/babili-webpack-plugin/
+ * @see https://survivejs.com/webpack/optimizing/minifying/
+ */
+exports.minifyJavascript = () => ({
+  plugins: [
+    new BabiliPlugin({
+      removeConsole: true,
+    }),
+  ],
 });
 
 const cssConfig = isModules => ([
