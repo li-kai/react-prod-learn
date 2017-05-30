@@ -1,6 +1,9 @@
+/* eslint import/no-extraneous-dependencies: ["error", {"devDependencies": true}] */
+
 // Helper utilities
 import path from 'path';
 import dotenv from 'dotenv';
+import fs from 'fs-extra';
 import chalk from 'chalk';
 
 // Express server dependencies
@@ -22,7 +25,7 @@ import App from './App';
 import HTMLDocument from './components/HTMLDocument';
 
 // Import environment variables
-dotenv.config({ path: path.join(PATHS.root, '.env.development') });
+dotenv.config();
 
 // If you use Docker, Vagrant or Cloud9, set
 // host: options.host || '0.0.0.0';
@@ -36,8 +39,8 @@ const IS_DEV_ENV = process.env.NODE_ENV === 'development';
 
 const server = express();
 
-let webpackAssets;
-if (IS_DEV_ENV) { /* eslint-disable global-require, import/no-extraneous-dependencies */
+let webpackStats;
+if (IS_DEV_ENV) { /* eslint-disable global-require */
   // Run Webpack dev server in development mode
   const webpackConfig = require('../webpack/webpack.dev');
   const webpack = require('webpack');
@@ -54,8 +57,8 @@ if (IS_DEV_ENV) { /* eslint-disable global-require, import/no-extraneous-depende
     },
   }));
   // app.use(webpackHotMiddleware(compiler));
-} else {  /* eslint-disable global-require, import/no-extraneous-dependencies */
-  // webpackAssets = require('./wesbpack-stats.json');
+} else {  /* eslint-disable global-require */
+  webpackStats = fs.readJSONSync(path.join(PATHS.dist, 'stats.json'));
 }
 
 function handleRender(req, res) {
@@ -73,14 +76,14 @@ function handleRender(req, res) {
   const preloadedState = store.getState();
 
   if (IS_DEV_ENV) { // Get webpack stats from dev-middleware
-    webpackAssets = res.locals.webpackStats.toJson().assetsByChunkName;
+    webpackStats = res.locals.webpackStats.toJson();
   }
 
   const html = renderToStaticMarkup(
     <HTMLDocument
       state={preloadedState}
       markup={componentMarkUp}
-      webpackAssets={webpackAssets}
+      webpackAssets={webpackStats.assetsByChunkName}
     />,
   );
 
@@ -90,6 +93,12 @@ function handleRender(req, res) {
 
 // Serves favicons
 server.use(favicon(path.join(PATHS.public, 'favicons', 'favicon.ico')));
+
+// On production, public directory is served by cloudfront as we configured in the ASSETS_ROOT_URL
+// On development, public directory is a middleware for other requests not served by webpack
+server.use(express.static(PATHS.dist, {
+  maxAge: 365 * 24 * 60 * 60,
+}));
 
 // This is fired every time the server side receives a request
 server.use(handleRender);

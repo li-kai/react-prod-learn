@@ -2,7 +2,19 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import serialize from 'serialize-javascript';
-import { get } from 'lodash';
+import { get, mapValues } from 'lodash/fp';
+
+const processWebpackAssets = mapValues((chunk) => {
+  const types = { js: [], css: [] };
+  chunk.forEach((asset) => {
+    if (asset.endsWith('.js')) {
+      types.js.push(asset);
+    } else if (asset.endsWith('.css')) {
+      types.css.push(asset);
+    }
+  });
+  return types;
+});
 
 class HTMLDocument extends PureComponent {
   static propTypes = {
@@ -15,7 +27,6 @@ class HTMLDocument extends PureComponent {
   static defaultProps = {
     asyncChunks: [],
   };
-
   render() {
     const helmet = Helmet.renderStatic();
     const {
@@ -25,14 +36,15 @@ class HTMLDocument extends PureComponent {
       asyncChunks,
     } = this.props;
 
+    const assetsByType = processWebpackAssets(webpackAssets);
     const scripts = [
-      { path: webpackAssets.manifest },
-      { path: webpackAssets.vendor },
+      { path: assetsByType.manifest.js },
+      { path: assetsByType.vendor.js },
       ...asyncChunks
-        .map(path => get(webpackAssets, ['modules', path]))
+        .map(fullPath => get(webpackAssets, ['modules', fullPath]))
         .filter(f => f != null)
         .map(f => ({ path: f })),
-      { path: webpackAssets.main },
+      { path: assetsByType.main.js },
     ];
 
     return (
@@ -41,6 +53,10 @@ class HTMLDocument extends PureComponent {
           { helmet.title.toComponent() }
           { helmet.meta.toComponent() }
           { helmet.link.toComponent() }
+          { assetsByType.main.css
+            ? <link rel="stylesheet" type="text/css" href={assetsByType.main.css} />
+            : null
+          }
           {/* <link rel="preload" href="/manifest.js" as="script" />
           <link rel="preload" href="/vendor.js" as="script" />
           <link rel="preload" href="/main.js" as="script" />*/}
