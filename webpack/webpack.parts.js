@@ -58,7 +58,10 @@ exports.loadCSS = ({ include, exclude, isCSSModules = false } = {}) => ({
  */
 exports.extractCSS = ({ include, exclude, isCSSModules = false } = {}) => {
   // Output extracted CSS to a file
-  const plugin = new ExtractTextPlugin('[name].[chunkhash].css');
+  const plugin = new ExtractTextPlugin({
+    filename: '[name].[chunkhash].css',
+    ignoreOrder: isCSSModules,
+  });
 
   return {
     module: {
