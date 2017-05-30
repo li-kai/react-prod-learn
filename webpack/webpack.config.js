@@ -11,15 +11,6 @@ module.exports = merge([
     resolve: {
       extensions: ['.js', '.jsx', '.json'],
     },
-    module: {
-      rules: [
-        {
-          test: /\.(js|jsx)$/,
-          loader: 'babel-loader',
-          include: PATHS.src,
-        },
-      ],
-    },
     plugins: [
       // Silly webpack, environment variables aren't injected by default
       new webpack.EnvironmentPlugin(['NODE_ENV', 'BABEL_ENV']),
