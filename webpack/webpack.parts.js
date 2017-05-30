@@ -1,6 +1,8 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const BabiliPlugin = require('babili-webpack-plugin');
+const StatsWriterPlugin = require('webpack-stats-plugin').StatsWriterPlugin;
+
 const cssnano = require('cssnano');
 const autoprefixer = require('autoprefixer');
 
@@ -178,6 +180,16 @@ exports.loadFonts = ({ include, exclude, options } = {}) => ({
       },
     ],
   },
+});
+
+exports.writeStats = ({ filename, fields } = {}) => ({
+  plugins: [
+    // Statistics Plugin to keep track of bundle file location
+    new StatsWriterPlugin({
+      filename,
+      fields,
+    }),
+  ],
 });
 
 /**
