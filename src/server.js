@@ -1,6 +1,7 @@
-// Node utilities
+// Helper utilities
 import path from 'path';
 import dotenv from 'dotenv';
+import chalk from 'chalk';
 
 // Express server dependencies
 import express from 'express';
@@ -38,12 +39,19 @@ const server = express();
 let webpackAssets;
 if (IS_DEV_ENV) { /* eslint-disable global-require, import/no-extraneous-dependencies */
   // Run Webpack dev server in development mode
-  const webpackConfig = require('../webpack/webpack.config');
+  const webpackConfig = require('../webpack/webpack.dev');
   const webpack = require('webpack');
   const webpackDevMiddleware = require('webpack-dev-middleware');
   // const webpackHotMiddleware = require('webpack-hot-middleware');
   const compiler = webpack(webpackConfig);
-  server.use(webpackDevMiddleware(compiler, { serverSideRender: true }));
+  server.use(webpackDevMiddleware(compiler, {
+    serverSideRender: true,
+    stats: {
+      hash: false,
+      version: false,
+      chunks: false,
+    },
+  }));
   // app.use(webpackHotMiddleware(compiler));
 } else {  /* eslint-disable global-require, import/no-extraneous-dependencies */
   // webpackAssets = require('./wesbpack-stats.json');
@@ -62,7 +70,8 @@ function handleRender(req, res) {
 
   // Grab the initial state from our Redux store
   const preloadedState = store.getState();
-  if (IS_DEV_ENV) {
+
+  if (IS_DEV_ENV) { // Get webpack stats from dev-middleware
     webpackAssets = res.locals.webpackStats.toJson().assetsByChunkName;
   }
 
@@ -85,12 +94,11 @@ server.use(favicon(path.join(PATHS.public, 'favicons', 'favicon.ico')));
 server.use(handleRender);
 
 // Finally, start the express server
-server.listen(PORT, (error) => {
-  if (!error) {
-    console.log(`Server started at port ${PORT}`);
-    if (IS_DEV_ENV) {
-      const openBrowser = require('react-dev-utils/openBrowser');
-      openBrowser(`${PROTOCOL}://${HOST}:${PORT}/`);
-    }
+server.listen(PORT, () => {
+  const url = `${PROTOCOL}://${HOST}:${PORT}/`;
+  console.log(`Server started at ${chalk.cyan(url)}`);
+  if (IS_DEV_ENV) {
+    const openBrowser = require('react-dev-utils/openBrowser');
+    openBrowser(url);
   }
 });
