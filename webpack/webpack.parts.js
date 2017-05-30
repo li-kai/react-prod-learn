@@ -121,6 +121,51 @@ exports.minifyCSS = ({ options }) => ({
 });
 
 /**
+ * Allows importing images into javascript.
+ *
+ * @see https://webpack.js.org/guides/asset-management/#loading-images
+ * @see https://survivejs.com/webpack/loading/images/
+ */
+exports.loadImages = ({ include, exclude, options } = {}) => ({
+  module: {
+    rules: [
+      {
+        test: /\.(ico|jpg|jpeg|png|gif|svg)(\?.*)?$/,
+        include,
+        exclude,
+
+        use: {
+          loader: 'url-loader',
+          options,
+        },
+      },
+    ],
+  },
+});
+
+/**
+ * Load all types of fonts as files
+ *
+ * @see https://webpack.js.org/guides/asset-management/#loading-fonts
+ */
+exports.loadFonts = ({ include, exclude, options } = {}) => ({
+  module: {
+    rules: [
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        include,
+        exclude,
+
+        use: {
+          loader: 'file-loader',
+          options,
+        },
+      },
+    ],
+  },
+});
+
+/**
  * Some libraries import Node modules but don't use them in the browser.
  * Tell Webpack to provide empty mocks for them so importing them works.
  *
