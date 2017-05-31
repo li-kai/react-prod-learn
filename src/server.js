@@ -91,12 +91,10 @@ function handleRender(req, res) {
   res.send(`<!DOCTYPE html>${html}`);
 }
 
-// Serves favicons
-server.use(favicon(path.join(PATHS.public, 'favicons', 'favicon.ico')));
+// Serves faviconss
+server.use(favicon(path.join(PATHS.assets, 'favicons', 'favicon.ico')));
 
-// On production, public directory is served by cloudfront as we configured in the ASSETS_ROOT_URL
-// On development, public directory is a middleware for other requests not served by webpack
-server.use(express.static(PATHS.dist, {
+server.use(express.static(PATHS.assets, {
   maxAge: 365 * 24 * 60 * 60,
 }));
 

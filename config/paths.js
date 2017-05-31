@@ -9,5 +9,6 @@ const PATHS = {
   public: path.join(ROOT_DIR, 'public'),
   node_modules: path.join(ROOT_DIR, 'node_modules'),
 };
+PATHS.assets = process.env.NODE_ENV === 'production' ? PATHS.dist : PATHS.public;
 
 module.exports = PATHS;

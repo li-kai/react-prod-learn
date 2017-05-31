@@ -6,7 +6,8 @@ import { get, mapValues } from 'lodash/fp';
 
 const processWebpackAssets = mapValues((chunk) => {
   const types = { js: [], css: [] };
-  chunk.forEach((asset) => {
+  const files = Array.isArray(chunk) ? chunk : [chunk];
+  files.forEach((asset) => {
     if (asset.endsWith('.js')) {
       types.js.push(asset);
     } else if (asset.endsWith('.css')) {
