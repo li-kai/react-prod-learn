@@ -29,7 +29,7 @@ function processErrors(summary, errors) {
 // Create the production build and print the deployment instructions.
 function build(previousFileSizes) {
   console.log('Creating an optimized production build...');
-  console.log(chalk.gray('This might take a while. Go have a coffee or something.'));
+  console.log(chalk.dim('This might take a while. Go have a coffee or something.'));
   console.log();
 
   const handleWebpackErrors = (err, stats) => {
@@ -96,8 +96,8 @@ function prepareForNewBuild() {
   });
 }
 
-if (process.env.NODE_EVV === 'production') {
-  chalk.red('Build is not running in optimized mode!');
+if (process.env.NODE_ENV !== 'production') {
+  console.log(chalk.red('Build is not running in optimized mode!'));
   process.exit(1);
 }
 
