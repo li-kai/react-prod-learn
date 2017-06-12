@@ -57,9 +57,9 @@ if (IS_DEV_ENV) { /* eslint-disable global-require */
   server.use(webpackHotMiddleware(compiler.compilers.find(subCompiler => subCompiler.name === 'client')));
   server.use(webpackHotServerMiddleware(compiler));
 } else {  /* eslint-disable global-require */
-  const serverRenderer = require('../server');
+  const serverRenderer = require('../server').default;
   const webpackStats = fs.readJSONSync(path.join(PATHS.dist, 'stats.json'));
-  server.use(serverRenderer(webpackStats));
+  server.use(serverRenderer({ clientStats: webpackStats }));
 }
 
 // Finally, start the express server

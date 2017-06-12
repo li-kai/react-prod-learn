@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs-extra');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
+const nodeExternals = require('webpack-node-externals');
 
 const PATHS = require('../config/paths');
 const SUPPORTED_BROWSERS = require('../config/supportedBrowsers');
@@ -24,7 +25,6 @@ const commonConfig = merge([
       new webpack.EnvironmentPlugin(['NODE_ENV', 'BABEL_ENV']),
     ],
   },
-  parts.minifyJavascript(),
   parts.minifyCSS({
     options: {
       discardComments: {
@@ -85,6 +85,7 @@ const clientConfig = merge([commonConfig,
       ],
     }),
   }),
+  parts.minifyJavascript(),
   parts.extractCSS({ include: PATHS.src, exclude: PATHS.styles, isCSSModules: true }),
   parts.extractCSS({ include: PATHS.styles, isCSSModules: false }),
   parts.writeStats(),
@@ -94,12 +95,13 @@ const serverConfig = merge([commonConfig,
   {
     name: 'server',
     target: 'node',
-    entry: path.join(PATHS.src, 'server.js'),
+    entry: path.join(PATHS.src, 'server', 'index.js'),
     output: {
       path: PATHS.dist,
       filename: 'server.js',
       libraryTarget: 'commonjs2',
     },
+    externals: nodeExternals(),
     node: {
       __dirname: true,
       __filename: true,

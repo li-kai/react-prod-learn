@@ -80,8 +80,8 @@ function prepareForNewBuild() {
   });
 }
 
-if (process.env.NODE_EVV === 'production') {
-  chalk.red('Build is not running in optimized mode!');
+if (process.env.NODE_EVV !== 'production') {
+  console.log(chalk.red('Build is not running in optimized mode!'));
   process.exit(1);
 }
 
