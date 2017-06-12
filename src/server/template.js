@@ -6,6 +6,9 @@ import { get, mapValues } from 'lodash/fp';
 
 const processWebpackAssets = mapValues((chunk) => {
   const types = { js: [], css: [] };
+  if (!Array.isArray(chunk)) {
+    chunk = [chunk];
+  }
   chunk.forEach((asset) => {
     if (asset.endsWith('.js')) {
       types.js.push(asset);
@@ -16,7 +19,7 @@ const processWebpackAssets = mapValues((chunk) => {
   return types;
 });
 
-class HTMLDocument extends PureComponent {
+class Template extends PureComponent {
   static propTypes = {
     markup: PropTypes.string.isRequired,
     state: PropTypes.object.isRequired,
@@ -78,4 +81,4 @@ class HTMLDocument extends PureComponent {
 
 }
 
-export default HTMLDocument;
+export default Template;
