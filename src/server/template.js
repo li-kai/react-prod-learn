@@ -24,7 +24,9 @@ class Template extends PureComponent {
     markup: PropTypes.string.isRequired,
     state: PropTypes.object.isRequired,
     asyncChunks: PropTypes.array,
-    webpackAssets: PropTypes.objectOf(PropTypes.string).isRequired,
+    webpackAssets: PropTypes.objectOf(
+      PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+    ).isRequired,
   };
 
   static defaultProps = {

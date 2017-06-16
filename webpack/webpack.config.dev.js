@@ -38,7 +38,11 @@ const clientConfig = merge([commonConfig,
   {
     name: 'client',
     target: 'web',
-    entry: path.join(PATHS.src, 'client.js'),
+    entry: [
+      'react-hot-loader/patch',
+      'webpack-hot-middleware/client',
+      path.join(PATHS.src, 'client.js'),
+    ],
     output: {
       path: PATHS.dist,
       filename: '[name].js',
@@ -54,7 +58,12 @@ const clientConfig = merge([commonConfig,
         name: 'manifest',
         minChunks: Infinity,
       }),
-    ]
+      new webpack.HotModuleReplacementPlugin(),
+      // prints more readable module names in the browser console on HMR updates
+      new webpack.NamedModulesPlugin(),
+      // do not emit compiled assets that include errors
+      new webpack.NoEmitOnErrorsPlugin(),
+    ],
   },
   parts.transpileJavascript({
     include: PATHS.src,
@@ -69,20 +78,21 @@ const clientConfig = merge([commonConfig,
         }],
         'react',
       ],
+      plugins: ['react-hot-loader/babel'].concat(babelConfig.plugins),
     }),
   }),
 ]);
 
-const serverConfig = merge([commonConfig, 
+const serverConfig = merge([commonConfig,
   {
     name: 'server',
     target: 'node',
     entry: path.join(PATHS.src, 'server.js'),
     output: {
-			path: PATHS.dist,
-			filename: 'server.js',
-			libraryTarget: 'commonjs2',
-		},
+      path: PATHS.dist,
+      filename: 'server.js',
+      libraryTarget: 'commonjs2',
+    },
     node: {
       __dirname: true,
       __filename: true,

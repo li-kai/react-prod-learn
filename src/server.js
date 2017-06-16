@@ -9,8 +9,8 @@ import Template from './server/template';
 import App from './App';
 
 export default function serverRenderer({ clientStats, serverStats }) {
-	return (req, res, next) => {
-		// Create a new Redux store instance
+  return (req, res, next) => {
+    // Create a new Redux store instance
     const store = createStore(rootReducer);
 
     // Render the component to a string
@@ -33,5 +33,5 @@ export default function serverRenderer({ clientStats, serverStats }) {
 
     // Send the rendered page back to the client
     res.send(`<!DOCTYPE html>${html}`);
-	};
+  };
 }

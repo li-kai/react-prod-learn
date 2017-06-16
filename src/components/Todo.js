@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 const Todo = ({ onClick, completed, text }) => {
   const btnClass = classNames('btn', {
-    'btn-success': completed,
+    'btn-primary': completed,
     'btn-secondary': !completed,
   });
   return (
