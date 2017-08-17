@@ -44,8 +44,9 @@ if (IS_DEV_ENV) { /* eslint-disable global-require */
   const webpackDevMiddleware = require('webpack-dev-middleware');
   const webpackHotMiddleware = require('webpack-hot-middleware');
   const webpackHotServerMiddleware = require('webpack-hot-server-middleware');
-  const webpackConfig = require('../../webpack/webpack.config.dev');
-  const compiler = webpack(webpackConfig);
+  const clientConfig = require('../../webpack/client.dev.js');
+  const serverConfig = require('../../webpack/server.dev.js');
+  const compiler = webpack([clientConfig, serverConfig]);
   server.use(webpackDevMiddleware(compiler, {
     stats: {
       colors: true,
@@ -56,7 +57,7 @@ if (IS_DEV_ENV) { /* eslint-disable global-require */
   }));
   server.use(webpackHotMiddleware(compiler.compilers.find(subCompiler => subCompiler.name === 'client')));
   server.use(webpackHotServerMiddleware(compiler));
-} else {  /* eslint-disable global-require */
+} else { /* eslint-disable global-require */
   const serverRenderer = require('../server').default;
   const webpackStats = fs.readJSONSync(path.join(PATHS.dist, 'stats.json'));
   server.use(serverRenderer({ clientStats: webpackStats }));

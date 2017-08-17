@@ -1,14 +1,14 @@
+require('dotenv').config();
+
 const fs = require('fs-extra');
 const path = require('path');
 const chalk = require('chalk');
 const webpack = require('webpack');
-const dotenv = require('dotenv');
 const { measureFileSizesBeforeBuild, printFileSizesAfterBuild } = require('react-dev-utils/FileSizeReporter');
 
-const config = require('../webpack/webpack.config.prod');
+const clientConfig = require('../webpack/client.prod.js');
+const serverConfig = require('../webpack/server.prod.js');
 const PATHS = require('../config/paths');
-
-dotenv.config();
 
 // Helper function for printing the folder paths
 const prettyPath = fullPath => chalk.cyan(`${path.basename(PATHS.root)}${path.sep}${path.basename(fullPath)}`);
@@ -50,7 +50,7 @@ function build(previousFileSizes) {
   };
 
   // Compile files
-  webpack(config).run((err, { stats: [clientStats, serverStats] }) => {
+  webpack([clientConfig, serverConfig]).run((err, { stats: [clientStats, serverStats] }) => {
     handleWebpackErrors(err, clientStats);
     handleWebpackErrors(err, serverStats);
 

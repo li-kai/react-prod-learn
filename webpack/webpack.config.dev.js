@@ -69,7 +69,7 @@ const clientConfig = merge([commonConfig,
     include: PATHS.src,
     options: Object.assign(babelConfig, {
       babelrc: false,
-      presets: [  // Override presets to support browsers
+      presets: [ // Override presets to support browsers
         ['env', {
           targets: {
             browsers: SUPPORTED_BROWSERS,
