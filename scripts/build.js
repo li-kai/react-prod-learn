@@ -50,7 +50,9 @@ function build(previousFileSizes) {
   };
 
   // Compile files
-  webpack([clientConfig, serverConfig]).run((err, { stats: [clientStats, serverStats] }) => {
+  webpack([clientConfig, serverConfig]).run((err, stats) => {
+    console.log(stats);
+    /*
     handleWebpackErrors(err, clientStats);
     handleWebpackErrors(err, serverStats);
 
@@ -63,6 +65,7 @@ function build(previousFileSizes) {
 
     console.log();
     console.log(`The ${prettyPath(PATHS.dist)} folder is ready to be deployed.`);
+    */
   });
 }
 
@@ -80,7 +83,7 @@ function prepareForNewBuild() {
   });
 }
 
-if (process.env.NODE_EVV !== 'production') {
+if (process.env.NODE_ENV !== 'production') {
   console.log(chalk.red('Build is not running in optimized mode!'));
   process.exit(1);
 }

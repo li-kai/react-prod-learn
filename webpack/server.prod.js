@@ -1,23 +1,19 @@
 const path = require('path');
 const webpack = require('webpack');
 
-const res = p => path.resolve(__dirname, p);
-
-const entry = res('../server/render.js');
-const output = res('../buildServer');
+const PATHS = require('../config/paths');
 
 module.exports = {
   name: 'server',
   target: 'node',
-  // devtool: 'source-map',
-  devtool: 'eval',
-  entry: [entry],
+  devtool: 'source-map',
+  entry: [path.join(PATHS.src, 'server', 'index.js')],
   resolve: {
     extensions: ['.js', '.css', '.scss'],
   },
   output: {
-    path: output,
-    filename: '[name].js',
+    path: PATHS.dist,
+    filename: 'server.js',
     libraryTarget: 'commonjs2',
   },
   module: {
